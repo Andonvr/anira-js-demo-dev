@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anira JS</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1 class="page-header__title">Anira JS</h1>
+        <p class="page-header__subtitle">Real-time neural audio processing in the browser</p>
+      </header>
+
+      <section class="section">
+        <h2 class="section__title">Demos</h2>
+        <ul class="card-list">
+          <li>
+            <a class="card-link" href="simple-gain-stereo.html">
+              <div class="card-link__name">Simple Gain Stereo</div>
+              <div class="card-link__desc">Applies a gain effect to stereo audio using a WASM-based ONNX backend.</div>
+            </a>
+          </li>
+          <li>
+            <a class="card-link" href="streaming-gain-stereo.html">
+              <div class="card-link__name">Streaming Gain Stereo</div>
+              <div class="card-link__desc">Streams audio through a gain effect with real-time processing.</div>
+            </a>
+          </li>
+          <li>
+            <a class="card-link" href="js-callback.html">
+              <div class="card-link__name">JS Callback</div>
+              <div class="card-link__desc">Uses a custom JavaScript callback as the inference backend.</div>
+            </a>
+          </li>
+          <li>
+            <a class="card-link" href="onnx-runtime-web-backend.html">
+              <div class="card-link__name">ONNX Runtime Web Backend</div>
+              <div class="card-link__desc">Runs inference using ONNX Runtime Web directly in the browser.</div>
+            </a>
+          </li>
+          <li>
+            <a class="card-link" href="js-copying.html">
+              <div class="card-link__name">JS Copying</div>
+              <div class="card-link__desc">Copies input audio directly to output using the JSCopyBackend in JavaScript.</div>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>

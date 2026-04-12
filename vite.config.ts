@@ -1,0 +1,35 @@
+import { defineConfig } from 'vite'
+
+const CORS_HEADERS = {
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+}
+
+export default defineConfig({
+  base: '/',
+  assetsInclude: ['**/*.wasm'],
+  build: {
+    target: 'esnext',
+    assetsInlineLimit: 0, // Never inline WASM files
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        'simple-gain-stereo': './simple-gain-stereo.html',
+        'streaming-gain-stereo': './streaming-gain-stereo.html',
+        'js-callback': './js-callback.html',
+        'onnx-runtime-web-backend': './onnx-runtime-web-backend.html',
+        'js-copying': './js-copying.html',
+      },
+      output: { format: 'es' },
+    },
+  },
+  worker: { format: 'es' },
+  server: { headers: CORS_HEADERS, fs: { strict: false } },
+  preview: { headers: CORS_HEADERS },
+  // This is a known issue when using WebAssembly with Vite 5.x
+  // Need to specify `optimizeDeps.exclude` to NPM packages that uses WebAssembly
+  // See: https://github.com/vitejs/vite/issues/8427
+  optimizeDeps: {
+    exclude: ['anira-js', 'onnxruntime-web'],
+  },
+})
