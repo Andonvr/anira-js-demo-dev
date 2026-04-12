@@ -7,7 +7,6 @@ const CORS_HEADERS = {
 
 export default defineConfig({
   base: '/',
-  assetsInclude: ['**/*.wasm'],
   build: {
     target: 'esnext',
     assetsInlineLimit: 0, // Never inline WASM files
@@ -30,6 +29,6 @@ export default defineConfig({
   // Need to specify `optimizeDeps.exclude` to NPM packages that uses WebAssembly
   // See: https://github.com/vitejs/vite/issues/8427
   optimizeDeps: {
-    exclude: ['anira-js', 'onnxruntime-web'],
+    exclude: ['anira-js'],
   },
 })
