@@ -25,10 +25,4 @@ export default defineConfig({
   worker: { format: 'es' },
   server: { headers: CORS_HEADERS, fs: { strict: false } },
   preview: { headers: CORS_HEADERS },
-  // This is a known issue when using WebAssembly with Vite 5.x
-  // Need to specify `optimizeDeps.exclude` to NPM packages that uses WebAssembly
-  // See: https://github.com/vitejs/vite/issues/8427
-  optimizeDeps: {
-    exclude: ['anira-js'],
-  },
 })
