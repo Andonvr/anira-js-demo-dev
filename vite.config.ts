@@ -18,6 +18,7 @@ export default defineConfig({
         'js-callback': './js-callback.html',
         'onnx-runtime-web-backend': './onnx-runtime-web-backend.html',
         'js-copying': './js-copying.html',
+        'pre-post-processors': './pre-post-processors.html',
       },
       output: { format: 'es' },
     },
