@@ -19,6 +19,8 @@ export default defineConfig({
         'onnx-runtime-web-backend': './onnx-runtime-web-backend.html',
         'js-copying': './js-copying.html',
         'pre-post-processors': './pre-post-processors.html',
+        'steerable-nafx': './steerable-nafx.html',
+        'guitar-lstm': './guitar-lstm.html',
       },
       output: { format: 'es' },
     },
