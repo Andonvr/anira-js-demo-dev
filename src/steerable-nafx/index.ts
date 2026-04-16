@@ -17,7 +17,7 @@ const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(
 // ------ WASM ------
 // -------------------
 
-const BUFFER_SIZE = 2048
+const BUFFER_SIZE = 1024
 const CNN_RECEPTIVE_FIELD = 132
 const REALTIME_THRESHOLD_MS = (BUFFER_SIZE / audioContext.sampleRate) * 1000
 

@@ -4,12 +4,13 @@ import {
 } from 'anira-js/workers/worklet-base'
 import {
   JSPrePostProcessor,
+  resolvePtr,
   type PossiblePointer,
   type VectorBufferF,
   type VectorRingBuffer,
 } from 'anira-js'
 
-const BUFFER_SIZE = 2048
+const BUFFER_SIZE = 1024
 const CNN_RECEPTIVE_FIELD = 132
 const TENSOR_INPUT_SIZE = BUFFER_SIZE + CNN_RECEPTIVE_FIELD
 const TENSOR_OUTPUT_SIZE = BUFFER_SIZE
@@ -27,11 +28,10 @@ class CNNPrePostProcessor extends JSPrePostProcessor {
     _backend: number
   ): void {
     const ringBuffer0 = this.wasmInstance._vector_ring_buffer_get(
-      ringBuffers as number, 0
+      resolvePtr(ringBuffers),
+      0
     )
-    const buffer0 = this.wasmInstance._vector_buffer_f_get(
-      buffers as number, 0
-    )
+    const buffer0 = this.wasmInstance._vector_buffer_f_get(resolvePtr(buffers), 0)
 
     this.wasmInstance._prepostprocessor_pop_samples_from_buffer_window(
       this.getPointer(),

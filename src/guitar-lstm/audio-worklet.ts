@@ -4,6 +4,7 @@ import {
 } from 'anira-js/workers/worklet-base'
 import {
   JSPrePostProcessor,
+  resolvePtr,
   type PossiblePointer,
   type VectorBufferF,
   type VectorRingBuffer,
@@ -29,7 +30,7 @@ class HybridNNPrePostProcessor extends JSPrePostProcessor {
       ringBuffers as number,
       0
     )
-    const buffer0 = this.wasmInstance._vector_buffer_f_get(buffers as number, 0)
+    const buffer0 = this.wasmInstance._vector_buffer_f_get(resolvePtr(buffers), 0)
 
     for (let batch = 0; batch < BUFFER_SIZE; batch++) {
       const offset = batch * CONTEXT_SAMPLES
