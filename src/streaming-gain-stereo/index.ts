@@ -7,7 +7,7 @@ await aniraJS.spinUpInferenceWorker()
 const audio = new Audio('vibes.mp3')
 const audioContext = new AudioContext({ sampleRate: 48000 })
 
-const { removeLoadingIndicator } = await setupDemoUI(aniraJS, audio, audioContext)
+const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(aniraJS, audio, audioContext)
 
 // -------------------
 // ------ WASM ------
@@ -77,11 +77,20 @@ const inferenceNode = await aniraJS.configureAudioWorklet(
   inferenceHandler,
   ppProcessor,
   'streaming-gain-stereo',
-  { inputChannels: 3, outputChannels: 3 }
+  {
+    inputChannels: 3,
+    outputChannels: 3,
+    // anira uses a 3rd scratch channel for the gain AudioParam; the Web Audio
+    // node itself is stereo in / stereo out.
+    audioWorkletNodeOptions: {
+      channelCount: 2,
+      outputChannelCount: [2],
+    },
+  }
 )
 
 const sourceNode = audioContext.createMediaElementSource(audio)
-sourceNode.connect(inferenceNode).connect(audioContext.destination)
+connectAudioGraph(sourceNode, inferenceNode)
 
 // LFO: oscillates gain between 0 and 1 at 1 Hz
 // OscillatorNode outputs [-1, 1], so shift+scale to [0, 1]

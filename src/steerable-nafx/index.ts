@@ -4,10 +4,14 @@ import { setupDemoUI } from '../utils/setupDemoUI'
 const aniraJS = await AniraJS.create()
 await aniraJS.spinUpInferenceWorker()
 
-const audio = new Audio('vibes.mp3')
+const audio = new Audio('guitar.mp3')
 const audioContext = new AudioContext({ sampleRate: 44100 })
 
-const { removeLoadingIndicator } = await setupDemoUI(aniraJS, audio, audioContext)
+const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(
+  aniraJS,
+  audio,
+  audioContext
+)
 
 // -------------------
 // ------ WASM ------
@@ -15,6 +19,7 @@ const { removeLoadingIndicator } = await setupDemoUI(aniraJS, audio, audioContex
 
 const BUFFER_SIZE = 2048
 const CNN_RECEPTIVE_FIELD = 132
+const REALTIME_THRESHOLD_MS = (BUFFER_SIZE / audioContext.sampleRate) * 1000
 
 const res = await fetch('steerable-nafx-2_blocks-libtorch-dynamic.onnx')
 if (!res.ok) throw new Error('Failed to load model')
@@ -49,10 +54,10 @@ const inferenceConfig = aniraJS.InferenceConfig(
   vectorModelData,
   vectorTensorShape,
   processingSpec,
-  5000, // max inference time in ms
-  2, // warm-up iterations (reduced for browser latency)
-  false,
-  0,
+  REALTIME_THRESHOLD_MS, // max inference time in ms (realtime threshold)
+  2, // warm-up iterations
+  false, // session exclusive processor
+  0, // blocking ratio
   1 // num parallel processors
 )
 
@@ -81,7 +86,7 @@ const inferenceNode = await aniraJS.configureAudioWorklet(
 )
 
 const sourceNode = audioContext.createMediaElementSource(audio)
-sourceNode.connect(inferenceNode).connect(audioContext.destination)
+connectAudioGraph(sourceNode, inferenceNode)
 
 removeLoadingIndicator()
 console.log('Steerable-NAFX demo initialized!')

@@ -10,7 +10,7 @@ await aniraJS.spinUpInferenceWorker(customInferenceWorkerUrl)
 const audio = new Audio('vibes.mp3')
 const audioContext = new AudioContext({ sampleRate: 48000 })
 
-const { removeLoadingIndicator } = await setupDemoUI(aniraJS, audio, audioContext, customInferenceWorkerUrl)
+const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(aniraJS, audio, audioContext, customInferenceWorkerUrl)
 
 // -------------------
 // ------ WASM ------
@@ -81,7 +81,7 @@ const inferenceNode = await aniraJS.configureAudioWorklet(
 )
 
 const sourceNode = audioContext.createMediaElementSource(audio)
-sourceNode.connect(inferenceNode).connect(audioContext.destination)
+connectAudioGraph(sourceNode, inferenceNode)
 
 removeLoadingIndicator()
 console.log('Demo initialized and ready!')
