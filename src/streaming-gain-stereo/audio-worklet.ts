@@ -1,7 +1,7 @@
 import {
   AniraAudioWorkletBase,
   type AniraWorkletState,
-} from 'anira-js/workers/worklet-base'
+} from 'anira-web/workers/worklet-base'
 
 const AUDIO_CHANNELS = 2
 const NUM_TENSORS = 2
@@ -20,8 +20,8 @@ class StreamingGainStereo extends AniraAudioWorkletBase {
   }
 
   protected async onConfigured(state: AniraWorkletState) {
-    const malloc = state.aniraJS.malloc.bind(state.aniraJS)
-    const heapU32 = state.aniraJS.getHeapU32()
+    const malloc = state.aniraWeb.malloc.bind(state.aniraWeb)
+    const heapU32 = state.aniraWeb.getHeapU32()
     const { inputDataBuffer, outputDataBuffer, ioConfig } = state
     const bpc = ioConfig.maxBufferSize * Float32Array.BYTES_PER_ELEMENT
 
@@ -80,7 +80,7 @@ class StreamingGainStereo extends AniraAudioWorkletBase {
     state: AniraWorkletState,
     bufferSize: number
   ): void {
-    const heapU32 = state.aniraJS.getHeapU32()
+    const heapU32 = state.aniraWeb.getHeapU32()
     const { inferenceHandler, ioConfig, inputChannelViews, outputChannelViews } = state
 
     const inputNode = inputs[ioConfig.inputNodeIndex]

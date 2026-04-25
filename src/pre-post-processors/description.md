@@ -4,7 +4,7 @@ This demo shows how to use a `JSPrePostProcessor` for custom JavaScript-based pr
 
 Unlike the regular `PrePostProcessor` (which runs entirely in C++/WASM), `JSPrePostProcessor` routes the pre- and post-processing phases through JavaScript callbacks, allowing you to run custom JS logic as part of the real-time audio path.
 
-**How it works:** Pre/post processing runs on the **audio worklet thread** (not the main thread). The C++ inference pipeline calls `Context::pre_process()` and `Context::post_process()` synchronously from the audio thread, which triggers a JS callback into the worklet's `AniraJS` instance. This means:
+**How it works:** Pre/post processing runs on the **audio worklet thread** (not the main thread). The C++ inference pipeline calls `Context::pre_process()` and `Context::post_process()` synchronously from the audio thread, which triggers a JS callback into the worklet's `AniraWeb` instance. This means:
 
 - The `JSPrePostProcessor` must be reconstructed and registered on the **worklet thread** (in `onConfigured()`)
 - The main thread creates the base `JSPrePostProcessor` and passes its pointer to the worklet

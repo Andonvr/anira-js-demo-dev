@@ -1,14 +1,14 @@
 import {
   AniraAudioWorkletBase,
   type AniraWorkletState,
-} from 'anira-js/workers/worklet-base'
+} from 'anira-web/workers/worklet-base'
 import {
   JSPrePostProcessor,
   resolvePtr,
   type PossiblePointer,
   type VectorBufferF,
   type VectorRingBuffer,
-} from 'anira-js'
+} from 'anira-web'
 
 const BUFFER_SIZE = 1024
 const CNN_RECEPTIVE_FIELD = 132
@@ -45,14 +45,14 @@ class CNNPrePostProcessor extends JSPrePostProcessor {
 
 class SteerableNafxWorklet extends AniraAudioWorkletBase {
   protected async onConfigured(state: AniraWorkletState) {
-    const { aniraJS, prePostProcessorPtr } = state
+    const { aniraWeb, prePostProcessorPtr } = state
 
     const ppProcessor = CNNPrePostProcessor.createFromPointer(
-      aniraJS.getWasmInstance(),
+      aniraWeb.getWasmInstance(),
       prePostProcessorPtr
     )
 
-    aniraJS.registerPrePostProcessor(ppProcessor)
+    aniraWeb.registerPrePostProcessor(ppProcessor)
   }
 }
 

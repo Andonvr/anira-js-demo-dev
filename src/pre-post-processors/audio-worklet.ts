@@ -1,13 +1,13 @@
 import {
   AniraAudioWorkletBase,
   type AniraWorkletState,
-} from 'anira-js/workers/worklet-base'
+} from 'anira-web/workers/worklet-base'
 import {
   JSPrePostProcessor,
   type PossiblePointer,
   type VectorBufferF,
   type VectorRingBuffer,
-} from 'anira-js'
+} from 'anira-web'
 
 /**
  * Custom JSPrePostProcessor that clamps the gain to [0, 1].
@@ -30,14 +30,14 @@ class GainClampPrePostProcessor extends JSPrePostProcessor {
 
 class PrePostProcessorWorklet extends AniraAudioWorkletBase {
   protected async onConfigured(state: AniraWorkletState) {
-    const { aniraJS, prePostProcessorPtr } = state
+    const { aniraWeb, prePostProcessorPtr } = state
 
     const ppProcessor = GainClampPrePostProcessor.createFromPointer(
-      aniraJS.getWasmInstance(),
+      aniraWeb.getWasmInstance(),
       prePostProcessorPtr
     )
 
-    aniraJS.registerPrePostProcessor(ppProcessor)
+    aniraWeb.registerPrePostProcessor(ppProcessor)
   }
 }
 

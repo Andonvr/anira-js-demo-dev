@@ -1,14 +1,14 @@
-import { AniraJS } from 'anira-js'
+import { AniraWeb } from 'anira-web'
 import { setupDemoUI } from '../utils/setupDemoUI'
 
-const aniraJS = await AniraJS.create()
-await aniraJS.spinUpInferenceWorker()
+const aniraWeb = await AniraWeb.create()
+await aniraWeb.spinUpInferenceWorker()
 
 const audio = new Audio('guitar.mp3')
 const audioContext = new AudioContext({ sampleRate: 44100 })
 
 const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(
-  aniraJS,
+  aniraWeb,
   audio,
   audioContext
 )
@@ -25,32 +25,32 @@ const res = await fetch('steerable-nafx-2_blocks-libtorch-dynamic.onnx')
 if (!res.ok) throw new Error('Failed to load model')
 const modelBuffer = await res.arrayBuffer()
 
-const vectorModelData = aniraJS.VectorModelData([
-  aniraJS.ModelData(modelBuffer, aniraJS.InferenceBackend.ONNX),
+const vectorModelData = aniraWeb.VectorModelData([
+  aniraWeb.ModelData(modelBuffer, aniraWeb.InferenceBackend.ONNX),
 ])
 
 // Input: [1, 1, bufferSize + receptiveField], Output: [1, 1, bufferSize]
-const inputShapeList = aniraJS.TensorShapeList([
+const inputShapeList = aniraWeb.TensorShapeList([
   [1, 1, BUFFER_SIZE + CNN_RECEPTIVE_FIELD],
 ])
-const outputShapeList = aniraJS.TensorShapeList([[1, 1, BUFFER_SIZE]])
-const tensorShape = aniraJS.TensorShape(inputShapeList, outputShapeList)
-const vectorTensorShape = aniraJS.VectorTensorShape([tensorShape])
+const outputShapeList = aniraWeb.TensorShapeList([[1, 1, BUFFER_SIZE]])
+const tensorShape = aniraWeb.TensorShape(inputShapeList, outputShapeList)
+const vectorTensorShape = aniraWeb.VectorTensorShape([tensorShape])
 
 // Mono: 1 channel, bufferSize samples
-const preprocessChannels = aniraJS.VectorSizeT([1])
-const postprocessChannels = aniraJS.VectorSizeT([1])
-const preprocessSize = aniraJS.VectorSizeT([BUFFER_SIZE])
-const postprocessSize = aniraJS.VectorSizeT([BUFFER_SIZE])
+const preprocessChannels = aniraWeb.VectorSizeT([1])
+const postprocessChannels = aniraWeb.VectorSizeT([1])
+const preprocessSize = aniraWeb.VectorSizeT([BUFFER_SIZE])
+const postprocessSize = aniraWeb.VectorSizeT([BUFFER_SIZE])
 
-const processingSpec = aniraJS.ProcessingSpec(
+const processingSpec = aniraWeb.ProcessingSpec(
   preprocessChannels,
   postprocessChannels,
   preprocessSize,
   postprocessSize
 )
 
-const inferenceConfig = aniraJS.InferenceConfig(
+const inferenceConfig = aniraWeb.InferenceConfig(
   vectorModelData,
   vectorTensorShape,
   processingSpec,
@@ -62,22 +62,22 @@ const inferenceConfig = aniraJS.InferenceConfig(
 )
 
 // Use JSPrePostProcessor so the custom CNN windowing logic runs in JS
-const ppProcessor = aniraJS.JSPrePostProcessor(inferenceConfig)
+const ppProcessor = aniraWeb.JSPrePostProcessor(inferenceConfig)
 
-const hostAudioConfig = aniraJS.HostConfig(128, 44100, false, 0)
-const inferenceHandler = aniraJS.InferenceHandler(ppProcessor, inferenceConfig)
-inferenceHandler.setInferenceBackend(aniraJS.InferenceBackend.ONNX)
+const hostAudioConfig = aniraWeb.HostConfig(128, 44100, false, 0)
+const inferenceHandler = aniraWeb.InferenceHandler(ppProcessor, inferenceConfig)
+inferenceHandler.setInferenceBackend(aniraWeb.InferenceBackend.ONNX)
 inferenceHandler.prepare(hostAudioConfig)
 
 // --------------------
 // ------ Audio -------
 // --------------------
 
-await aniraJS.registerAudioWorkletForContext(
+await aniraWeb.registerAudioWorkletForContext(
   audioContext,
   new URL('./audio-worklet.ts', import.meta.url)
 )
-const inferenceNode = await aniraJS.configureAudioWorklet(
+const inferenceNode = await aniraWeb.configureAudioWorklet(
   audioContext,
   inferenceHandler,
   ppProcessor,

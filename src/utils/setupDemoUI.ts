@@ -1,11 +1,11 @@
-import type { AniraJS } from 'anira-js'
+import type { AniraWeb } from 'anira-web'
 
 /**
  * Wires up the demo UI controls that already exist in the HTML.
  * Enables buttons and attaches event handlers for audio playback and worker management.
  */
 export const setupDemoUI = async (
-  aniraJS: AniraJS,
+  aniraWeb: AniraWeb,
   audio?: HTMLAudioElement,
   audioContext?: AudioContext,
   customInferenceWorkerUrl?: URL
@@ -21,8 +21,8 @@ export const setupDemoUI = async (
   addWorkerButton.disabled = false
 
   const updateWorkerCount = () => {
-    workerCountElement.textContent = aniraJS.getActiveWorkers().length.toString()
-    removeWorkerButton.disabled = aniraJS.getActiveWorkers().length === 0
+    workerCountElement.textContent = aniraWeb.getActiveWorkers().length.toString()
+    removeWorkerButton.disabled = aniraWeb.getActiveWorkers().length === 0
   }
 
   if (audio) {
@@ -54,16 +54,16 @@ export const setupDemoUI = async (
 
   addWorkerButton.onclick = async () => {
     try {
-      await aniraJS.spinUpInferenceWorker(customInferenceWorkerUrl)
+      await aniraWeb.spinUpInferenceWorker(customInferenceWorkerUrl)
       updateWorkerCount()
-      console.log('Added inference worker. Total:', aniraJS.getActiveWorkers().length)
+      console.log('Added inference worker. Total:', aniraWeb.getActiveWorkers().length)
     } catch (error) {
       console.error('Failed to add worker:', error)
     }
   }
 
   removeWorkerButton.onclick = async () => {
-    const workers = aniraJS.getActiveWorkers()
+    const workers = aniraWeb.getActiveWorkers()
     if (workers.length === 0) {
       console.warn('No workers to remove')
       return
@@ -71,7 +71,7 @@ export const setupDemoUI = async (
 
     await workers[0].stop()
     updateWorkerCount()
-    console.log('Removed inference worker. Remaining:', aniraJS.getActiveWorkers().length)
+    console.log('Removed inference worker. Remaining:', aniraWeb.getActiveWorkers().length)
   }
 
   updateWorkerCount()
