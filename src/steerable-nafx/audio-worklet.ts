@@ -1,14 +1,14 @@
 import {
+  JSPrePostProcessor,
+  resolvePtr,
+  VectorRingBuffer,
+  type PossiblePointer,
+  type VectorBufferF,
+} from 'anira-web'
+import {
   AniraAudioWorkletBase,
   type AniraWorkletState,
 } from 'anira-web/workers/worklet-base'
-import {
-  JSPrePostProcessor,
-  resolvePtr,
-  type PossiblePointer,
-  type VectorBufferF,
-  type VectorRingBuffer,
-} from 'anira-web'
 
 const BUFFER_SIZE = 1024
 const CNN_RECEPTIVE_FIELD = 132

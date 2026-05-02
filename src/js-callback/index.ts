@@ -7,7 +7,11 @@ await aniraWeb.spinUpInferenceWorker()
 const audio = new Audio('vibes.mp3')
 const audioContext = new AudioContext({ sampleRate: 48000 })
 
-const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(aniraWeb, audio, audioContext)
+const { removeLoadingIndicator, connectAudioGraph } = await setupDemoUI(
+  aniraWeb,
+  audio,
+  audioContext
+)
 
 // -------------------
 // ------ WASM ------
