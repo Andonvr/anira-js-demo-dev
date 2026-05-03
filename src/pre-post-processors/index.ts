@@ -1,5 +1,6 @@
 import { AniraWeb } from 'anira-web'
 import { setupDemoUI } from '../utils/setupDemoUI'
+import workletUrl from './audio-worklet.ts?worker&url'
 
 const aniraWeb = await AniraWeb.create()
 await aniraWeb.spinUpInferenceWorker()
@@ -68,10 +69,7 @@ inferenceHandler.prepare(hostAudioConfig)
 
 // Register a custom audio worklet that sets up the JSPrePostProcessor
 // subclass on the worklet thread, where pre/post processing actually runs.
-await aniraWeb.registerAudioWorkletForContext(
-  audioContext,
-  new URL('./audio-worklet.ts', import.meta.url)
-)
+await aniraWeb.registerAudioWorkletForContext(audioContext, workletUrl)
 const inferenceNode = await aniraWeb.configureAudioWorklet(
   audioContext,
   inferenceHandler,
