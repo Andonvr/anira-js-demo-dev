@@ -1,6 +1,16 @@
-# Simple Gain
+# Simple Gain Stereo
 
-This demo shows how to load and use a simple audio effect model using AniraWeb. The inference is run using the default ONNX backend. This is the simplest possible way to run actual inference. No JS-callbacks are used, as the WebAssembly build of ONNX Runtime is used directly, instead of Onnx Runtime Web.
-The model used in this demo simulates a simple stereo gain effect. The value of the gain can be changed using the slider in the UI. Note that this value is not applied per sample, but rather per inference (multiple samples at a time). For a more complex example, where control values are applied per sample, see the [Streaming Gain Demo](/streaming-gain-stereo.html).
+The smallest end-to-end anira-web setup, and the foundation every
+other demo builds on. A stereo gain plugin running through anira's
+**WASM-side ONNX Runtime** — the default inference path that ships
+in anira's WebAssembly module.
 
-TODO: More text
+The model has two tensors: a streamable stereo audio tensor that
+flows through the audio worklet block by block, and a non-streamable
+scalar gain value updated asynchronously from the slider in the UI.
+No custom worklet, no custom backend, no custom pre/post-processing —
+just the default everything.
+
+If you want to follow the source step by step, the
+[Basic Usage guide]($DOCS_URL/web-api/basic_usage.html) walks through
+exactly this demo.

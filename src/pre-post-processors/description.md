@@ -1,15 +1,27 @@
-# PrePostProcessors
+# Custom Pre/Post Processing
 
-This demo shows how to use a `JSPrePostProcessor` for custom JavaScript-based pre/post processing in the inference pipeline.
+Anira's default `PrePostProcessor` runs entirely in C++/WASM. When
+your model needs JavaScript-side preparation between blocks —
+windowing, normalisation, parameter clamping, custom multi-tensor
+packing —
+[`JSPrePostProcessor`]($DOCS_URL/web-api/reference/class/JSPrePostProcessor.html)
+routes the pre- and post-processing phases through JS callbacks
+instead.
 
-Unlike the regular `PrePostProcessor` (which runs entirely in C++/WASM), `JSPrePostProcessor` routes the pre- and post-processing phases through JavaScript callbacks, allowing you to run custom JS logic as part of the real-time audio path.
+This demo is the smallest possible example: a `JSPrePostProcessor`
+subclass that **clamps the gain to `[0, 1]`** in `preProcess` before
+the C++ side reads it. Move the slider above 1.0 and you'll find the
+audio doesn't get any louder — that's the JS callback firing every
+block.
 
-**How it works:** Pre/post processing runs on the **audio worklet thread** (not the main thread). The C++ inference pipeline calls `Context::pre_process()` and `Context::post_process()` synchronously from the audio thread, which triggers a JS callback into the worklet's `AniraWeb` instance. This means:
+The override has to live on the **audio worklet thread** (where the
+real-time callback runs), so the construction is split: the main
+thread allocates a `JSPrePostProcessor`, the worklet reconstructs it
+as the subclass via `createFromPointer` and registers it with
+`aniraWeb.registerPrePostProcessor`. See
+[Custom Pre- and Post-Processing]($DOCS_URL/web-api/custom_pre_post_processing.html)
+for the full pattern.
 
-- The `JSPrePostProcessor` must be reconstructed and registered on the **worklet thread** (in `onConfigured()`)
-- The main thread creates the base `JSPrePostProcessor` and passes its pointer to the worklet
-- `setInput()` writes to shared WASM memory (atomics), so values set from the main thread are visible on the worklet thread
-
-In this demo, `preProcess` is overridden to clamp the gain to a maximum of 1.0. You can verify the JS callback is working: moving the slider above 1.0 has no effect on the audio volume.
-
-**Important:** Any transformation applied via `setInput` in the override must be **idempotent** — the worklet may re-read its own modified value before the main thread writes the next one. Clamping satisfies this: clamping an already-clamped value is a no-op.
+The [steerable-nafx](/steerable-nafx.html) and
+[guitar-lstm](/guitar-lstm.html) demos use this same mechanism for
+real windowing logic.

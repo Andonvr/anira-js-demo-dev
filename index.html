@@ -15,6 +15,47 @@
       </header>
 
       <section class="section">
+        <h2 class="section__title">About</h2>
+        <p>
+          <strong>anira</strong> is a real-time neural network inference
+          library for low-latency audio processing. <strong>anira-web</strong>
+          ships the same C++ library compiled to WebAssembly with a TypeScript
+          wrapper that integrates with the Web Audio API.
+        </p>
+        <p>
+          You can find the documentation for it
+          <a href="https://anira-project.github.io/anira/web-api/index.html"
+            >here</a
+          >.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2 class="section__title">Using the demos</h2>
+        <p>Each demo page exposes the same controls:</p>
+        <ul>
+          <li>
+            <strong>Play / Pause</strong> — start or stop the audio source.
+          </li>
+          <li>
+            <strong>Dry / Wet</strong> — toggle between the unprocessed (dry)
+            audio and the model-processed (wet) signal.
+          </li>
+          <li>
+            <strong>+ Worker / &minus; Worker</strong> — spin up or tear down
+            inference workers. Each worker is a Web Worker hosting an
+            inference thread; spawn more if a single worker can&rsquo;t keep
+            up. With zero workers, you won&rsquo;t hear anything and the
+            console will log warnings.
+          </li>
+        </ul>
+        <p>
+          The source code for setting up each demo is presented below the
+          controls on the demo page.
+        </p>
+      </section>
+
+      <section class="section">
         <h2 class="section__title">Demos</h2>
         <ul class="card-list">
           <li>
