@@ -5,9 +5,7 @@ The same stereo gain plugin as
 through
 [`ONNXRuntimeWebBackend`]($DOCS_URL/web-api/reference/class/ONNXRuntimeWebBackend.html)
 — anira-web's second built-in engine — instead of the WASM-side ONNX
-Runtime. This backend wraps `onnxruntime-web` on the JavaScript side,
-which unlocks its WebGPU and WebGL execution providers for models
-that benefit from GPU acceleration.
+Runtime. This backend wraps `onnxruntime-web` on the JavaScript side.
 
 Two changes vs. the simple version: `ModelData` is given a URL string
 (`onnxruntime-web` fetches the model itself), and the backend is

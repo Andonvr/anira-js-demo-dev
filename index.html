@@ -62,49 +62,49 @@
           <li>
             <a class="card-link" href="simple-gain-stereo.html">
               <div class="card-link__name">Simple Gain Stereo</div>
-              <div class="card-link__desc">Applies a gain effect to stereo audio using a WASM-based ONNX backend.</div>
+              <div class="card-link__desc">The minimal end-to-end anira-web setup — a stereo gain plugin running through the default WASM-side ONNX Runtime, and the foundation every other demo builds on.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="streaming-gain-stereo.html">
               <div class="card-link__name">Streaming Gain Stereo</div>
-              <div class="card-link__desc">Streams audio through a gain effect with real-time processing.</div>
+              <div class="card-link__desc">Delivers gain as a second streamable tensor for sample-accurate updates, driven by a Web Audio LFO through a custom audio worklet.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="js-callback.html">
               <div class="card-link__name">JS Callback</div>
-              <div class="card-link__desc">Uses a custom JavaScript callback as the inference backend.</div>
+              <div class="card-link__desc">The simplest way to move inference out of WASM and into JavaScript — plugs in the built-in <code>JSBackendBase</code> as a passthrough hook on the inference worker.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="onnx-runtime-web-backend.html">
               <div class="card-link__name">ONNX Runtime Web Backend</div>
-              <div class="card-link__desc">Runs inference using ONNX Runtime Web directly in the browser.</div>
+              <div class="card-link__desc">Runs the same stereo gain model through anira-web's <code>ONNXRuntimeWebBackend</code>, swapping the WASM engine for <code>onnxruntime-web</code> on the JS side.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="js-copying.html">
               <div class="card-link__name">JS Copying</div>
-              <div class="card-link__desc">Copies input audio directly to output using the JSCopyBackend in JavaScript.</div>
+              <div class="card-link__desc">A user-written custom inference backend — subclasses <code>JSBackendBase</code> and ships its own custom inference worker, providing the template for wrapping any JS-side runtime.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="pre-post-processors.html">
               <div class="card-link__name">PrePostProcessors</div>
-              <div class="card-link__desc">Uses a JSPrePostProcessor for custom JavaScript-based pre/post processing in the inference pipeline.</div>
+              <div class="card-link__desc">Routes pre- and post-processing through JS via <code>JSPrePostProcessor</code>, demonstrated by clamping the gain slider to <code>[0, 1]</code> from a JavaScript callback firing on every block.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="steerable-nafx.html">
               <div class="card-link__name">Steerable-NAFX (CNN)</div>
-              <div class="card-link__desc">Guitar amp simulation using a CNN model with custom JS pre-processing for sliding window context.</div>
+              <div class="card-link__desc">A CNN-based neural guitar amp whose <code>JSPrePostProcessor</code> assembles each block's input as a sliding window prepended with 132 samples of past context for the convolutions to look back at.</div>
             </a>
           </li>
           <li>
             <a class="card-link" href="guitar-lstm.html">
               <div class="card-link__name">GuitarLSTM (HybridNN)</div>
-              <div class="card-link__desc">Guitar amp simulation using an LSTM model with custom JS pre-processing for batched context windows.</div>
+              <div class="card-link__desc">A hybrid LSTM/dense guitar amp whose <code>JSPrePostProcessor</code> packs each block into a batched <code>[BUFFER_SIZE, 1, 150]</code> tensor of overlapping 150-sample context windows run in parallel.</div>
             </a>
           </li>
         </ul>
