@@ -6,7 +6,7 @@ const CORS_HEADERS = {
 }
 
 export default defineConfig({
-  base: '/',
+  base: process.env.BASE_PATH ?? '/',
   build: {
     target: 'esnext',
     assetsInlineLimit: 0, // Never inline WASM files
