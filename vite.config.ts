@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const CORS_HEADERS = {
   'Cross-Origin-Embedder-Policy': 'require-corp',
@@ -7,6 +8,16 @@ const CORS_HEADERS = {
 
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/',
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/coi-serviceworker/coi-serviceworker.min.js',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
   build: {
     target: 'esnext',
     assetsInlineLimit: 0, // Never inline WASM files
