@@ -69,13 +69,15 @@ async function buildInferenceNode(modelPath: string) {
   inferenceHandler.setInferenceBackend(aniraWeb.InferenceBackend.ONNX)
   inferenceHandler.prepare(hostAudioConfig)
 
-  return await aniraWeb.configureAudioWorklet(
+  const node = await aniraWeb.configureAudioWorklet(
     audioContext,
     inferenceHandler,
     ppProcessor,
     undefined,
     { inputChannels: 1, outputChannels: 1, maxBufferSize: BUFFER_SIZE }
   )
+
+  return { node, latencySamples: inferenceHandler.getLatency() }
 }
 
 // Register all worklet modules before instantiating any nodes.
@@ -83,8 +85,8 @@ await aniraWeb.registerAudioWorkletForContext(audioContext)
 await audioContext.audioWorklet.addModule(transientWorkletUrl)
 await audioContext.audioWorklet.addModule(grainWorkletUrl)
 
-const inferenceNode1 = await buildInferenceNode('funk_drums.onnx')
-const inferenceNode2 = await buildInferenceNode('djembe.onnx')
+const { node: inferenceNode1, latencySamples: latency1 } = await buildInferenceNode('funk_drums.onnx')
+const { node: inferenceNode2, latencySamples: latency2 } = await buildInferenceNode('djembe.onnx')
 
 // -------------------------------------------------------------------------
 // Audio graph
@@ -103,8 +105,10 @@ const inferenceNode2 = await buildInferenceNode('djembe.onnx')
 const sourceNode = audioContext.createMediaElementSource(audio)
 
 // Master dry/wet: delay the dry path so it lines up with the model latency.
+// Mirrors PluginProcessor.cpp's setWetLatency(onnxProcessor.getLatency()).
+const dryLatencySamples = Math.max(latency1, latency2)
 const dryDelay = audioContext.createDelay(2)
-dryDelay.delayTime.value = BUFFER_SIZE / audioContext.sampleRate
+dryDelay.delayTime.value = dryLatencySamples / audioContext.sampleRate
 
 const masterDryGain = audioContext.createGain()
 const masterWetGain = audioContext.createGain()

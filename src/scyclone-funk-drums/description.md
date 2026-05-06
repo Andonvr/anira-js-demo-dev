@@ -9,14 +9,7 @@ the browser.
 
 ## Signal flow
 
-```
-source ─┬─► dryDelay (≈341 ms latency match) ───► masterDryGain ─┐
-        │                                                         ├─► dest
-        └─► toMono → inputGain ─┬─► [Funk]   ─┐                    │
-                                └─► [Djembe] ─┴─► fade ─► comp(dry/wet) ─► outputGain ─► masterWetGain ─┘
-
-[net] = transient splitter → HP → LP → RAVE inference → (post-RAVE dry + grain delay) → on/off
-```
+<figure class="signal-flow"><img src="$SIGNAL_FLOW_SVG" alt="Scyclone signal flow" style="width:100%;height:auto"></figure>
 
 ## How the DSP maps to Web Audio
 
