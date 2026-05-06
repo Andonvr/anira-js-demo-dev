@@ -50,6 +50,47 @@ export const setupDemoUI = async (
         audio.pause()
       }
     }
+
+    // Inject a "Load audio" file picker next to the audio toggle so users
+    // can swap in their own audio. Replacing audio.src is transparent to
+    // the MediaElementSource that the demo wires up downstream.
+    const fileLabel = document.createElement('label')
+    fileLabel.className = 'btn'
+    fileLabel.textContent = 'Load audio'
+    fileLabel.title = 'Load your own audio file'
+    fileLabel.style.cursor = 'pointer'
+
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.accept = 'audio/*'
+    fileInput.style.display = 'none'
+    fileLabel.appendChild(fileInput)
+
+    let currentObjectUrl: string | null = null
+    fileInput.onchange = async () => {
+      const file = fileInput.files?.[0]
+      if (!file) return
+      const wasPlaying = !audio.paused
+      audio.pause()
+      if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl)
+      currentObjectUrl = URL.createObjectURL(file)
+      audio.src = currentObjectUrl
+      audio.load()
+      fileLabel.textContent = file.name
+      fileLabel.appendChild(fileInput)
+      if (wasPlaying) {
+        try {
+          if (audioContext && audioContext.state !== 'running') {
+            await audioContext.resume()
+          }
+          await audio.play()
+        } catch (error) {
+          console.error('Failed to resume after loading file:', error)
+        }
+      }
+    }
+
+    audioToggleButton.parentElement?.appendChild(fileLabel)
   }
 
   addWorkerButton.onclick = async () => {
