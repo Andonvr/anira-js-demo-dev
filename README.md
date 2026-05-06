@@ -12,6 +12,7 @@ A small collection of in-browser demos for [anira](https://github.com/anira-proj
 - **PrePostProcessors** — custom JS pre/post-processing in the inference pipeline
 - **Steerable-NAFX (CNN)** — guitar amp sim with sliding-window context
 - **GuitarLSTM (HybridNN)** — guitar amp sim with batched LSTM context
+- **Scyclone (funk_drums)** — RAVE-based timbre transfer into a funk drums corpus
 
 ## Local development
 
