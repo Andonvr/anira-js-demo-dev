@@ -4,7 +4,7 @@ Two [RAVE](https://github.com/acids-ircam/RAVE) neural synthesis models — one 
 
 ## Signal flow
 
-<figure class="signal-flow"><img src="$SIGNAL_FLOW_SVG" alt="Signal flow diagram" style="width:100%;height:auto"></figure>
+<figure class="signal-flow"><img src="$SIGNAL_FLOW_SVG" alt="Signal flow diagram" style="width:700px;height:auto;max-width:100%"></figure>
 
 ## How the DSP maps to Web Audio
 
