@@ -2,7 +2,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { Options } from 'rollup-plugin-license'
 
-// anira-web pre-bundles onnxruntime-web, so rollup-plugin-license can't see
+// @anira-project/anira pre-bundles onnxruntime-web, so rollup-plugin-license can't see
 // it as a transitive dep. List packages here that are inlined into other
 // bundled deps and need attribution anyway.
 const INLINED_BUNDLED_DEPS = ['onnxruntime-web']
@@ -12,7 +12,7 @@ const INLINED_BUNDLED_DEPS = ['onnxruntime-web']
 // into a WASM blob). Each subdirectory under `dist/licenses/` is treated as
 // one attributed component, populated by that package's build (e.g. anira's
 // cmake/BuildWasm.cmake).
-const PACKAGES_WITH_BUNDLED_LICENSES = ['anira-web']
+const PACKAGES_WITH_BUNDLED_LICENSES = ['@anira-project/anira']
 
 // Manual attributions for content that isn't pulled in via npm but is still
 // part of the deployed bundle (e.g. ported source, bundled model files).

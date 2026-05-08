@@ -1,8 +1,8 @@
 # About
 
-**anira** is a real-time neural network inference library for low-latency
+**Anira** is a real-time neural network inference library for low-latency
 audio processing.<br>
-**anira-web** ships the same C++ library compiled to
+**Anira Web** ships the same C++ library compiled to
 WebAssembly with a TypeScript wrapper that integrates with the Web Audio API.
 
 You can find the documentation for it

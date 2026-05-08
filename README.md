@@ -1,6 +1,6 @@
-# anira-web-demo
+# Anira Web Demo
 
-A small collection of in-browser demos for [anira](https://github.com/anira-project/anira) — a real-time neural network inference library for low-latency audio processing. The demos use `anira-web`, which ships the C++ library compiled to WebAssembly with a TypeScript wrapper that integrates with the Web Audio API.
+A small collection of in-browser demos for [anira](https://github.com/anira-project/anira) — a real-time neural network inference library for low-latency audio processing. The demos use `@anira-project/anira`, which ships the C++ library compiled to WebAssembly with a TypeScript wrapper that integrates with the Web Audio API.
 
 ## Demos
 
@@ -39,7 +39,7 @@ GitHub Pages cannot set custom HTTP headers, so cross-origin isolation (required
 ## Links
 
 - [anira (main repo)](https://github.com/anira-project/anira)
-- [anira-web API docs](https://anira-project.github.io/anira/web-api/index.html)
+- [Anira Web API docs](https://anira-project.github.io/anira/web-api/index.html)
 
 ## Third-party licenses
 

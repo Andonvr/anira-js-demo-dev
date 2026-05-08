@@ -1,50 +1,22 @@
-# Scyclone (full chain)
+# RAVE: Funk & Djembe
 
-A web port of the full [Scyclone](https://github.com/Torsion-Audio/Scyclone)
-neural audio plugin. Scyclone re-synthesises incoming audio in the timbre of
-a corpus the model was trained on; the original plugin runs **two** RAVE
-models in parallel (`funk_drums` and `djembe`) and surrounds each with a
-small chain of conventional DSP. This demo reproduces that whole chain in
-the browser.
+Two [RAVE](https://github.com/acids-ircam/RAVE) neural synthesis models — one trained on funk drums, one on djembe — running in parallel inside the browser. A **Fade** slider blends between the two; a **Mix** slider sets the dry/wet balance.
 
 ## Signal flow
 
-<figure class="signal-flow"><img src="$SIGNAL_FLOW_SVG" alt="Scyclone signal flow" style="width:100%;height:auto"></figure>
+<figure class="signal-flow"><img src="$SIGNAL_FLOW_SVG" alt="Signal flow diagram" style="width:100%;height:auto"></figure>
 
 ## How the DSP maps to Web Audio
 
 | Block | Implementation |
 |---|---|
 | RAVE inference (×2) | Two `AniraWeb.configureAudioWorklet` nodes, each running a `[1, 1, 16384]` ONNX model on its own inference worker |
-| HP + LP filter | Two `BiquadFilterNode`s per network, driven by a single 0–1 XY knob (Scyclone's filter mapping) |
-| Dynamics compressor | `DynamicsCompressorNode` with explicit dry/wet gains and a separate makeup `GainNode` |
-| Transient splitter | Pure-JS `AudioWorkletProcessor` — three envelope followers compute an attack/sustain ratio per sample, port of Scyclone's `TransientSplitter.cpp` |
-| Granular delay | Pure-JS `AudioWorkletProcessor` — circular delay buffer + 24-voice grain pool with Hann windowing and linear-interpolation reads. Replaces Scyclone's RNBO patcher |
-| On/off, fade crossfade, comp dry/wet, master dry/wet | Plain `GainNode`s |
-| Master latency match | `DelayNode` of 16384 / 48000 ≈ 341 ms on the dry path |
-| Stereo → mono downmix | `GainNode` with `channelCount=1`, `channelInterpretation='speakers'` |
+| Stereo → mono downmix | `inputGain` GainNode with `channelCount=1`, `channelInterpretation='speakers'` |
+| Fade crossfade | `fadeGain1` / `fadeGain2` with gains summing to 1 |
+| Master dry/wet crossfade | `dryGain` / `wetGain` with gains summing to 1, both connected to `destination` |
+| Latency compensation | `dryDelay` — a `DelayNode` on the dry path matching model latency, so dry and wet stay time-aligned. The sample count is obtained via `inferenceHandler.getLatency()`, which anira derives from the `InferenceConfig` during `prepare()` ([latency model docs](https://anira-project.github.io/anira/latency.html)): it accounts for buffer-alignment adaptation between host read size and model output chunk size, plus the number of host callbacks consumed while the model is inferring (derived from `m_max_inference_time`). |
 
-The transient splitter and grain delay both run as **plain JavaScript**
-worklets — no WASM. The grain delay's 4 parameters (delay position, grain
-size, interval, pitch) are exposed as `AudioParam`s and read each render
-quantum.
+## Notes
 
-## UI
-
-Three primary controls mirror Scyclone's main view: **Fade** (Funk ↔
-Djembe), **Compression** (comp dry/wet) and **Mix** (master dry/wet), plus
-on/off checkboxes for each network. Everything else (input/output gain,
-transient shape & filter & attack time per network, all 8 grain delay
-knobs, comp threshold/ratio/makeup) lives behind an **Advanced
-parameters** disclosure, laid out as a Funk column and a Djembe column
-either side of a divider, with the global parameters above.
-
-## Caveats
-
-- **CPU**: two RAVE models at 16384/48 kHz is heavy. Underpowered machines
-  will glitch.
-- **Sample rate**: Scyclone's models are trained at **48 kHz**. The
-  `AudioContext` and the anira `HostConfig` are both pinned to 48000;
-  running at 44.1 kHz produces aliased, screeching output.
-- **Djembe network starts off** by default, matching the plugin. Tick its
-  checkbox and pull the Fade slider below 1 to mix it in.
+- **CPU**: two RAVE models at 16384/48 kHz is heavy. Underpowered machines will glitch.
+- **Sample rate**: the models are trained at **48 kHz**. The `AudioContext` is pinned to 48000; running at 44.1 kHz produces aliased output.

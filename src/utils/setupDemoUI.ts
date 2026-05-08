@@ -1,4 +1,4 @@
-import type { AniraWeb } from 'anira-web'
+import type { AniraWeb } from '@anira-project/anira'
 
 /**
  * Wires up the demo UI controls that already exist in the HTML.
@@ -16,7 +16,9 @@ export const setupDemoUI = async (
   const workerCountElement = document.getElementById('worker-count')!
   const addWorkerButton = document.getElementById('add-worker') as HTMLButtonElement
   const removeWorkerButton = document.getElementById('remove-worker') as HTMLButtonElement
-  const dryWetToggleButton = document.getElementById('dry-wet-toggle') as HTMLButtonElement | null
+  const dryWetToggleButton = document.getElementById(
+    'dry-wet-toggle'
+  ) as HTMLButtonElement | null
 
   addWorkerButton.disabled = false
 
@@ -112,7 +114,10 @@ export const setupDemoUI = async (
 
     await workers[0].stop()
     updateWorkerCount()
-    console.log('Removed inference worker. Remaining:', aniraWeb.getActiveWorkers().length)
+    console.log(
+      'Removed inference worker. Remaining:',
+      aniraWeb.getActiveWorkers().length
+    )
   }
 
   updateWorkerCount()
